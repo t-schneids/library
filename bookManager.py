@@ -8,7 +8,11 @@ import json
 
 class BookManager:
     def __init__(self, db_file='books_db.json'):
-        """initialize a json file to act as a database for the user"""
+        """
+            initialize a json file to act as a database for the user
+            USAGE: BookManager() -- initializes a new db
+                   BookManager(db_file='custom_db_json')
+        """
         self.db_file = db_file
 
         try:
