@@ -45,6 +45,10 @@ class BookManager:
     def printDB(self):
         print(self.books_db)
 
+    def clearDB(self):
+        self.books_db = {}
+        self.__save_db()
+
 # PRIVATE FUNCTIONS: 
     # def __init__(self, db_file='books_db.json'):
     def __save_db(self):
