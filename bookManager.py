@@ -3,7 +3,7 @@
 # Purpose: To provide an interface for users to successfully
 #          get book recommendations based on previous reads
 
-import requests
+#import requests
 import json
 
 class BookManager:
@@ -30,15 +30,27 @@ class BookManager:
     # def get_recommendations(self, book_title):
 # function that can add books that the user has read to the 'db'
     def add_book(self, book_title):
+        if book_title not in self.books_db:
+            self.books_db[book_title] = {'Review': None, 'Rating': None, 'Recommend': None}
+            self.__save_db()
+        else: 
+            print(f"{book_title} is already in the Database")
         
+
 # function that allows user to review books that they have already read
     # def review_book(self, book_title, review):
 # function that allows interactive use of all of these functions
     # def interactive(self):
 
+    def printDB(self):
+        print(self.books_db)
+
 # PRIVATE FUNCTIONS: 
     # def __init__(self, db_file='books_db.json'):
-    # def __save_db(self):
+    def __save_db(self):
+        """Saved database info to external file"""
+        with open(self.db_file, 'w') as file:
+            json.dump(self.books_db, file, indent= 4)
 
 
 
