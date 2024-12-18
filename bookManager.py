@@ -29,7 +29,8 @@ class BookManager:
 # function that provides recommendations -- it just asks for input
     # def get_recommendations(self, book_title):
 # function that can add books that the user has read to the 'db'
-    # def add_book(self, book_title):
+    def add_book(self, book_title):
+        
 # function that allows user to review books that they have already read
     # def review_book(self, book_title, review):
 # function that allows interactive use of all of these functions
