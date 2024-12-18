@@ -7,6 +7,6 @@ def main():
     b.add_book('Harry Potter 3')
     b.add_book('Harry Potter 4')
     b.printDB() 
-    b.clearDB()
+    # b.clearDB()
 
 main()
