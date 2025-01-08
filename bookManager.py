@@ -110,7 +110,7 @@ class BookManager:
     def printDB(self):
         print(self.books_db)
 
-    def clear_db(self):
+    def clearDB(self):
         self.books_db = {}
         self.__save_db()
 
