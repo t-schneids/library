@@ -31,18 +31,59 @@ class BookManager:
         """Gets recommendations based off a book
         :param book_title: the title of the book
         """
-        recommendations = []
         api_url = f"https://www.googleapis.com/books/v1/volumes?q={book_title}"
         response = requests.get(api_url)
         if response.status_code == 200:
             books = response.json().get('items', [])
-            print(books)
-            return recommendations
+
+            OGAuthors = []
+            for book in books:
+                volumeInfo = book.get("volumeInfo", {})
+                title = volumeInfo.get("title", "unknown")
+                authors = volumeInfo.get("authors", "unknown")
+
+                if title == book_title:
+                    OGAuthors = authors
+                    print(f"OG: {OGAuthors}")
+                    break
+
+            print("We recommend: ")
+            
+            self.__get_Books(book_title, books, False, OGAuthors)
+
+            print()
+            response = input('Would you like to see the description for each book? (y/n)')
+            if response.lower() == 'y':
+                self.__get_Books(book_title, books, True, OGAuthors)
         else:
             print("Failed to fetch recommendations.")
-            return []
         
-# function that can add books that the user has read to the 'db'
+    def __get_Books(self, book_title, books, printRecommendations, OGAuthors):
+        """Purpose: to find book recommendations given a book title
+        :param book_title: the title of the book to search
+        :param books: a list of books that pop up given book title
+        :printRecommendations: a boolean indicating whether the user wants recommendations for the books"""
+        
+        for book in books: 
+                # check if the book is what was originally searched
+                # if yes, save author name. Use the name to filter out books for recommendation
+                volumeInfo = book.get("volumeInfo", {})
+                title = volumeInfo.get("title", "unknown")
+                authors = volumeInfo.get("authors", "unknown")  # authors is a list of authors for a singular book
+                description = volumeInfo.get("description", "unknown")
+                
+                
+                # Check to see if current book is written by the same authors that wrote the book we searched for
+                
+                if authors != OGAuthors:
+                    if printRecommendations:
+                        print(f"Title: {title} , Book Author(s): {authors} , Book Description: {description}")
+                        print()
+                    else:
+                        print(f"Title: {title} , Book Author(s): {authors}")
+                        print()
+
+
     def add_book(self, book_title):
         """Adds a book to the database
         :param book_title: the title of the book
@@ -54,7 +95,7 @@ class BookManager:
             print(f"{book_title} is already in the Database")
         
 
-# function that allows user to review books that they have already read
+
     def review_book(self, book_title, review, rating):
         """Allows the user to review a book
         :param book_title: the title of the book
@@ -62,9 +103,6 @@ class BookManager:
         :param rating: the rating of the book
         """
         self.add_book(book_title)
-        #if book_title not in self.books_db:
-         #   self.books_db[book_title] = {'Review': None, 'Rating': None, 'Recommend': None}
-        #    self.__save_db()
         print("Starting review")
         self.books_db[book_title]['Review'] = review
         rating = int(rating)
@@ -76,8 +114,6 @@ class BookManager:
         self.__save_db()
 
 
-
-# function that allows interactive use of all of these functions
     def interactive(self):
         """Allows the user to interact with the database"""
         continueLoop = True
@@ -98,8 +134,8 @@ class BookManager:
                 rating = input('Rate the book: ')
                 self.review_book(book, review, rating)
             elif choice == 'g':
-                print('Not implemented yet')
-                #self.get_recommendations
+                title = input('Provide a book title: ')
+                self.get_recommendations(title)
             elif choice == 'p':
                 self.printDB()
             elif choice == 'q':
