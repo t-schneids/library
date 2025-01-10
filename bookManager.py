@@ -3,7 +3,7 @@
 # Purpose: To provide an interface for users to successfully
 #          get book recommendations based on previous reads
 
-#import requests
+import requests
 import json
 
 class BookManager:
@@ -27,7 +27,21 @@ class BookManager:
 
 # create a class that can export these functionalities:
 # function that provides recommendations -- it just asks for input
-    # def get_recommendations(self, book_title):
+    def get_recommendations(self, book_title):
+        """Gets recommendations based off a book
+        :param book_title: the title of the book
+        """
+        recommendations = []
+        api_url = f"https://www.googleapis.com/books/v1/volumes?q={book_title}"
+        response = requests.get(api_url)
+        if response.status_code == 200:
+            books = response.json().get('items', [])
+            print(books)
+            return recommendations
+        else:
+            print("Failed to fetch recommendations.")
+            return []
+        
 # function that can add books that the user has read to the 'db'
     def add_book(self, book_title):
         """Adds a book to the database
