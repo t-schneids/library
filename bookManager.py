@@ -30,6 +30,9 @@ class BookManager:
     # def get_recommendations(self, book_title):
 # function that can add books that the user has read to the 'db'
     def add_book(self, book_title):
+        """Adds a book to the database
+        :param book_title: the title of the book
+        """
         if book_title not in self.books_db:
             self.books_db[book_title] = {'Review': None, 'Rating': None, 'Recommend': None}
             self.__save_db()
@@ -39,6 +42,11 @@ class BookManager:
 
 # function that allows user to review books that they have already read
     def review_book(self, book_title, review, rating):
+        """Allows the user to review a book
+        :param book_title: the title of the book
+        :param review: the review of the book
+        :param rating: the rating of the book
+        """
         self.add_book(book_title)
         #if book_title not in self.books_db:
          #   self.books_db[book_title] = {'Review': None, 'Rating': None, 'Recommend': None}
@@ -57,10 +65,11 @@ class BookManager:
 
 # function that allows interactive use of all of these functions
     def interactive(self):
+        """Allows the user to interact with the database"""
         continueLoop = True
         while continueLoop:
             print('')
-            self.options()
+            self.__options()
             choice = input('Please provide your choice: ')
             choice = choice.lower()
             
@@ -87,16 +96,11 @@ class BookManager:
                     self.clear_db()
                 print('Database cleared')
             else:
-                print('Not Valid Input')
-                
+                print('Not Valid Input')   
 
 
-
-
-        
-
-
-    def options(self):
+    def __options(self):
+        """Prints out the options for the user in the interactive mode"""
         print('Options: ')
         print('Type o to see options')
         print('Type a to add a book to the dictionary')
@@ -108,9 +112,11 @@ class BookManager:
 
 
     def printDB(self):
+        """prints the database"""
         print(self.books_db)
 
     def clearDB(self):
+        """Clears the database"""
         self.books_db = {}
         self.__save_db()
 
