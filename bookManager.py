@@ -5,6 +5,7 @@
 
 import requests
 import json
+from datetime import date
 
 class BookManager:
     def __init__(self, db_file='books_db.json'):
@@ -21,16 +22,21 @@ class BookManager:
         except:
             self.books_db = {}
 
-# making an updateeee
-
-# design/implementation plan
-
 # create a class that can export these functionalities:
 # function that provides recommendations -- it just asks for input
-    def get_recommendations(self, book_title):
+    def get_recommendations(self):
         """Gets recommendations based off a book
         :param book_title: the title of the book
         """
+        book_title = ""
+        choice = input('Do you want a recommendation based on your most recent book title read (type recent)? Or do you want to provide a book title now (type provide)? ')
+        if choice.lower() == 'provide':
+            book_title = input('Enter book title: ')
+        else:
+            for key in self.books_db:
+                if self.books_db[key]['Most Recent'] == True:
+                    book_title = key
+
         api_url = f"https://www.googleapis.com/books/v1/volumes?q={book_title}"
         response = requests.get(api_url)
         if response.status_code == 200:
@@ -88,8 +94,12 @@ class BookManager:
         """Adds a book to the database
         :param book_title: the title of the book
         """
+        today = date.today().strftime("%m/%d/%Y")
+        for booktitle in self.books_db:
+            self.books_db[booktitle]['Most Recent'] = False
+
         if book_title not in self.books_db:
-            self.books_db[book_title] = {'Review': None, 'Rating': None, 'Recommend': None}
+            self.books_db[book_title] = {'Review': None, 'Rating': None, 'Recommend': None, 'Date Entered': today, 'Most Recent': True}
             self.__save_db()
         else: 
             print(f"{book_title} is already in the Database")
@@ -134,8 +144,7 @@ class BookManager:
                 rating = input('Rate the book: ')
                 self.review_book(book, review, rating)
             elif choice == 'g':
-                title = input('Provide a book title: ')
-                self.get_recommendations(title)
+                self.get_recommendations()
             elif choice == 'p':
                 self.printDB()
             elif choice == 'q':
@@ -143,7 +152,7 @@ class BookManager:
             elif choice == 'c':
                 clear = input('Type c again to confirm clearing or type anything else to return to options: ')
                 if clear == 'c':
-                    self.clear_db()
+                    self.clearDB()
                 print('Database cleared')
             else:
                 print('Not Valid Input')   
